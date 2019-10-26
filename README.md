@@ -149,7 +149,7 @@ You can also buy/sell on other markets, that's the last parameter, it just defau
 
 If you like these scripts, I'd be happy if you donated Bitcoin to [3LGdXkqYCMPC2S3rJELPjxoK4G7Ao9Qa1s](bitcoin:3LGdXkqYCMPC2S3rJELPjxoK4G7Ao9Qa1s).
 
-This script is inspired by my own [check-cdp]([https://github.com/jooray/check-cdp](https://github.com/jooray/check-cdp) script (well, I can be my own inspiration sometimes:). 
+This script is inspired by my own [check-cdp](https://github.com/jooray/check-cdp) script (well, I can be my own inspiration sometimes:). 
 
 You can also use my referral links to register for the services that allow you to use Bitcoin better:
 
