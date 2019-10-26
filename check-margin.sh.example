@@ -4,7 +4,7 @@ cd ~/.bitmex-checker
 FOUND=`find ~/.bitmex-checker -mmin -120 -name bitmex-status -not -empty -print`
 if [ -z "$FOUND" ]
   then # we don't have recent notification (120 minutes)
-    if node bitmex-margin.js -w 1.2 > ~/.bitmex-checker/bitmex-status 2>&1
+    if node margin-bitmex.js -w 1.2 > ~/.bitmex-checker/bitmex-status 2>&1
     then # margin is safe
       rm -f ~/.bitmex-checker/bitmex-status
     else # problematic and recent margin notification
@@ -13,7 +13,7 @@ if [ -z "$FOUND" ]
     fi
   fi
 
-    if node bitmex-margin.js -w 1.1 > ~/.bitmex-checker/bitmex-status-urgent 2>&1
+    if node margin-bitmex.js -w 1.1 > ~/.bitmex-checker/bitmex-status-urgent 2>&1
     then # we are safe
       rm -f ~/.bitmex-checker/bitmex-status-urgent
     else # problematic recent CDPs
