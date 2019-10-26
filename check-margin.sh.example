@@ -1,0 +1,22 @@
+#!/bin/bash
+
+cd ~/.bitmex-checker
+FOUND=`find ~/.bitmex-checker -mmin -120 -name bitmex-status -not -empty -print`
+if [ -z "$FOUND" ]
+  then # we don't have recent notification (120 minutes)
+    if node bitmex-margin.js -w 1.2 > ~/.bitmex-checker/bitmex-status 2>&1
+    then # margin is safe
+      rm -f ~/.bitmex-checker/bitmex-status
+    else # problematic and recent margin notification
+      ( echo "Bitmex: liquidation price getting close" ; cat ~/.bitmex-checker/bitmex-status ) | \
+        signal-cli -u +1123123123 send +1232323232323
+    fi
+  fi
+
+    if node bitmex-margin.js -w 1.1 > ~/.bitmex-checker/bitmex-status-urgent 2>&1
+    then # we are safe
+      rm -f ~/.bitmex-checker/bitmex-status-urgent
+    else # problematic recent CDPs
+      ( echo "Bitmex: We are too close to liquidation price" ; cat ~/.bitmex-checker/bitmex-status-urgent ) | \
+        signal-cli -u +1123123123 send +1232323232323
+    fi

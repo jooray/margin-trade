@@ -1,0 +1,16 @@
+{
+  "name": "margin-bitmex",
+  "version": "1.0.0",
+  "description": "",
+  "main": "margin-bitmex.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ccxt": "^1.18.1335",
+    "dotenv": "^8.2.0",
+    "yargs": "^14.2.0"
+  }
+}
