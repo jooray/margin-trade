@@ -10,7 +10,7 @@ Sometimes you want to keep USD value of your Bitcoin, for example if you know yo
 
 In order to do all of this, I decided to write a few scripts. The first one checks if my margin balance on [Bitmex](https://www.bitmex.com/register/FG84Zq) is high enough in order for the positions not to get liquidated. If the margin is approaching lower values, I get an encrypted notification via Signal.
 
-The second script allows me to quickly hedge positions of BTC I received or unhedge if I spend them. 
+The second script allows me to quickly hedge positions of BTC I received or unhedge if I spend them.
 
 This allows me to hedge Bitcoin price risk, earn [Bitmex](https://www.bitmex.com/register/FG84Zq)'s funding rate and stay chilled during day and night, because I know I don't put too much on [Bitmex](https://www.bitmex.com/register/FG84Zq), but my position won't get liquidated.
 
@@ -42,7 +42,7 @@ During the time of the hedging, my 60 USD (and then 39 USD after I ate dinner) w
 
 Well, the banks are so last century, which bank pays you 10% p.a. on your USD balance? :)
 
-Of course, you could do all of this in a web interface. Set up liquidation price notifications in your crypto tracking app, update it with trades and sell and buy XBTUSD contract on [Bitmex](https://www.bitmex.com/register/FG84Zq). 
+Of course, you could do all of this in a web interface. Set up liquidation price notifications in your crypto tracking app, update it with trades and sell and buy XBTUSD contract on [Bitmex](https://www.bitmex.com/register/FG84Zq).
 
 ## Installation
 
@@ -112,7 +112,9 @@ This will run the checker every thirty minutes. This is also the interval in whi
 
 ### trade-bitmex.js
 
-This is an experimental feature which allows me to do quick trades from the command-line without login. 
+This is an experimental feature which allows me to do quick trades from the command-line without login
+and see your position and other parameters.
+
 
 ```
 # node trade-bitmex.js help
@@ -120,11 +122,15 @@ trade-bitmex <cmd> [args]
 
 Commands:
   trade-bitmex market side amount [symbol]  submit a market order
+  trade-bitmex position [symbol]            show current position
+  trade-bitmex fundingrate [symbol]         show funding rate
 
 Options:
   --version  Show version number                                       [boolean]
   --help     Show help                                                 [boolean]
 ```
+
+#### Command-line trading
 
 If I want to fix USD value of my BTC, I do market sell order, for example in this case fixing 1 USD:
 
@@ -145,11 +151,39 @@ node trade-bitmex.js market buy 1
 
 You can also buy/sell on other markets, that's the last parameter, it just defaults to XBTUSD.
 
+#### Checking your position
+
+In order to see your current (dollar) position run:
+
+```
+# node trade-bitmex.js position
+Position -60 USD
+```
+
+Because we are short 60 USD (-60 means short 60) on XBTUSD, it means that along with original
+Bitcoin worth 60 USD at the time when we entered the position and the current balance, we
+have hedged 60 USD value in BTC.
+
+This is something like USD balance of this strategy.
+
+#### Funding rate
+
+We would also like to know the current interest rate (called funding rate).
+Shorts earn this funding rate, so if this gets negative, we pay funding rate
+(it happens sometimes).
+
+```
+node trade-bitmex.js fundingrate
+Instrument XBTUSD funding rate 0.0001 which is approx 10.95% p.a.
+```
+
+Please note that the funding rate changes all the time.
+
 # Donate and more information about the crypto lifestyle
 
 If you like these scripts, I'd be happy if you donated Bitcoin to [3LGdXkqYCMPC2S3rJELPjxoK4G7Ao9Qa1s](bitcoin:3LGdXkqYCMPC2S3rJELPjxoK4G7Ao9Qa1s).
 
-This script is inspired by my own [check-cdp](https://github.com/jooray/check-cdp) script (well, I can be my own inspiration sometimes:). 
+This script is inspired by my own [check-cdp](https://github.com/jooray/check-cdp) script (well, I can be my own inspiration sometimes:).
 
 You can also use my referral links to register for the services that allow you to use Bitcoin better:
 
@@ -157,34 +191,6 @@ You can also use my referral links to register for the services that allow you t
 
 * [Lamium](http://bit.ly/lamium-juraj) - a service to pay your standard invoices in Europe (SEPA) area using Bitcoin
 
-* [Purse](https://bit.ly/purse-juraj) - a service that allows you to do [up to 33% discounted shopping on Amazon](https://juraj.bednar.io/en/blog-en/2019/06/11/how-to-use-cryptocurrencies-for-discounted-shopping-on-amazon/) 
+* [Purse](https://bit.ly/purse-juraj) - a service that allows you to do [up to 33% discounted shopping on Amazon](https://juraj.bednar.io/en/blog-en/2019/06/11/how-to-use-cryptocurrencies-for-discounted-shopping-on-amazon/)
 
 If you want to learn more about using cryptocurrencies and why it is good, check out my upcoming book [Financial Surveillance and Crypto Utopias](https://juraj.bednar.io/en/projects/financial-surveillance-and-crypto-utopias-book/) and see the talk from [Hackers Congress Paralelní Polis](https://juraj.bednar.io/en/talk-en/2019/10/16/financial-surveillance-and-crypto-utopias-recording-from-hcpp19/) where I go through the main topics of the first part.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
