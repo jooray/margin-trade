@@ -23,7 +23,7 @@ Promise.all([balancePromise, positionsPromise]).then( (values) => {
   liquidationPercentage = liquidationPrice / lastPrice
   console.error('Last price: ' + lastPrice)
   console.error('Liquidation price: ' + liquidationPrice)
-  console.error('Margin of safety: ' + liquidationPercentage)
+  console.error('Margin of safety: ' + (liquidationPercentage*100).toFixed(2) + '%')
   if ((argv.w) && (argv.w > liquidationPercentage)) {
     console.log("Our liquidation margin is below threshold!")
     exchange.privateGetUserDepositAddress({currency: 'XBt'}).then( (response) => {
