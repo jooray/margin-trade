@@ -18,18 +18,22 @@ Promise.all([balancePromise, positionsPromise]).then( (values) => {
   balance = values[0]
   positions = values[1]
   console.error('Balance: ' + balance.total.BTC)
-  liquidationPrice = positions[0].liquidationPrice
-  lastPrice = positions[0].lastPrice
-  liquidationPercentage = liquidationPrice / lastPrice
-  console.error('Last price: ' + lastPrice)
-  console.error('Liquidation price: ' + liquidationPrice)
-  console.error('Margin of safety: ' + (liquidationPercentage*100).toFixed(2) + '%')
-  if ((argv.w) && (argv.w > liquidationPercentage)) {
-    console.log("Our liquidation margin is below threshold!")
-    exchange.privateGetUserDepositAddress({currency: 'XBt'}).then( (response) => {
-      console.log("Deposit to: " + response)
-      process.exit(1)
-    })
+  if (positions.length > 0) {
+    liquidationPrice = positions[0].liquidationPrice
+    lastPrice = positions[0].lastPrice
+    liquidationPercentage = liquidationPrice / lastPrice
+    console.error('Last price: ' + lastPrice)
+    console.error('Liquidation price: ' + liquidationPrice)
+    console.error('Margin of safety: ' + (liquidationPercentage*100).toFixed(2) + '%')
+    if ((argv.w) && (argv.w > liquidationPercentage)) {
+      console.log("Our liquidation margin is below threshold!")
+      exchange.privateGetUserDepositAddress({currency: 'XBt'}).then( (response) => {
+        console.log("Deposit to: " + response)
+        process.exit(1)
+      })
+    }
+  } else {
+    console.error('No positions open')
   }
 }
 )
