@@ -2,6 +2,10 @@
 require('dotenv').config()
 var ccxt = require ('ccxt')
 
+var config = {
+ 'apiKey': process.env.TRADEAPIKEY,
+ 'secret': process.env.TRADEAPISECRET,
+}
 
 require('yargs')
   .scriptName("trade-bitmex")
@@ -22,10 +26,10 @@ require('yargs')
   }, function (argv) {
     console.log('Submitting a ' + argv.side + ' order for ' + argv.amount + ' on ' + argv.symbol)
 
-    let exchange = new ccxt.bitmex({
-     'apiKey': process.env.TRADEAPIKEY,
-     'secret': process.env.TRADEAPISECRET,
-    })
+    let exchange = new ccxt.bitmex(config)
+    if (process.env.TESTNET === 'true') {
+      exchange.urls.api = exchange.urls.test
+    }
 
     exchange.privatePostOrder({
       symbol: argv.symbol,
@@ -49,11 +53,10 @@ require('yargs')
     })
   }, function (argv) {
 
-    let exchange = new ccxt.bitmex({
-     'apiKey': process.env.APIKEY,
-     'secret': process.env.APISECRET,
-    })
-
+    let exchange = new ccxt.bitmex(config)
+    if (process.env.TESTNET === 'true') {
+      exchange.urls.api = exchange.urls.test
+    }
     exchange.privateGetPosition({
       filter: {
         "isOpen": true,
@@ -74,7 +77,9 @@ require('yargs')
   }, function (argv) {
 
     let exchange = new ccxt.bitmex()
-
+    if (process.env.TESTNET === 'true') {
+      exchange.urls.api = exchange.urls.test
+    }
     exchange.publicGetInstrument({
       filter: {
         "state": "Open",
