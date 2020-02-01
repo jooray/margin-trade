@@ -6,8 +6,7 @@ let exchange = new ccxt.bitmex({
  'apiKey': process.env.APIKEY,
  'secret': process.env.APISECRET,
 })
-process.env.TESTNET = process.env.TESTNET === 'true' ? true : false
-if (process.env.TESTNET) {
+if (process.env.TESTNET === 'true') {
   exchange.urls.api = exchange.urls.test
 }
 
