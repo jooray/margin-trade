@@ -11,6 +11,8 @@
   "dependencies": {
     "ccxt": "^1.18.1335",
     "dotenv": "^8.2.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.5",
     "yargs": "^14.2.0"
   }
 }
