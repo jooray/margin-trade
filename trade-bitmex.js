@@ -21,14 +21,6 @@ let getExchange = exchange => config => {
   return res
 }
 
-// console.log(getExchange('deribit')({}))
-// const deribit = getExchange('deribit')({
-//   apiKey: process.env.DERIBITAPIKEY,
-//   secret: process.env.DERIBITAPISECRET
-// })
-// let info = await deribit.privateGetPositions()
-// console.log(info)
-// process.exit(0)
 const exchanges = ['bitmex', 'deribit']
 const exchangeAbstraction = method => argv => {
   let methods = {
@@ -46,8 +38,16 @@ const exchangeAbstraction = method => argv => {
   return methods[argv.exchange][method](argv)
 }
 
+function printSubmit(side, amount, symbol) {
+  console.log(`Submitting a ${side} order for ${amount} on ${symbol}`)
+}
+function printOrderResult(status, price, id) {
+  console.log(`Order status ${status} average price ${price}`)
+  console.log(`Order ID: ${id}`)
+}
+
 async function marketBitmex (argv) {
-  console.log('Submitting a ' + argv.side + ' order for ' + argv.amount + ' on ' + argv.symbol)
+  printSubmit(argv.side, argv.amount, argv.symbol)
 
   let exchange = getExchange('bitmex')(configs.bitmex)
 
@@ -60,12 +60,24 @@ async function marketBitmex (argv) {
   ordStatus = orderResult.ordStatus
   ordPrice = orderResult.avgPx
   ordId = orderResult.orderID
-  console.log('Order status ' + ordStatus + ' average price ' + ordPrice)
-  console.log('Order ID: ' + ordId)
+  printOrderResult(ordStatus, ordPrice, ordId)
 }
 
 async function marketDeribit (argv) {
-  console.log("uninplemented");
+  printSubmit(argv.side, argv.amount, argv.symbol)
+  const exchange = getExchange('deribit')(configs.deribit)
+  const promise = argv.side === 'buy' ? exchange.privatePostBuy : exchange.privatePostSell
+  let orderResult = await promise({
+    instrument: argv.symbol === 'XBTUSD' ? 'BTC-PERPETUAL' : argv.symbol,
+    amount: argv.amount,
+    type: 'market',
+  })
+  orderResult = orderResult.result.order
+  ordStatus = orderResult.state
+  ordPrice = orderResult.avgPrice
+  ordId = orderResult.orderId
+  printOrderResult(ordStatus, ordPrice, ordId)
+
 }
 
 function printPosition({currency, quoteCurrency, positionAmount, price, entry, value}) {
@@ -142,7 +154,7 @@ async function fundingRateDeribit (argv) {
   let fundingRate = await rp({
     uri: `https://${process.env.TESTNET === 'true' ? 'test.' : ''}deribit.com/api/v2/public/get_funding_chart_data`,
     qs: {
-      instrument_name: 'BTC-PERPETUAL',
+      instrument_name: argv.symbol === 'XBTUSD' ? 'BTC-PERPETUAL' : argv.symbol,
       length: '8h'
     },
     json: true
@@ -151,19 +163,16 @@ async function fundingRateDeribit (argv) {
   printFundingRate('BTC-PERPETUAL', fundingRate)
 }
 
-
 require('yargs')
-  .scriptName("trade-bitmex")
+  .scriptName('trade-bitmex')
   .usage('$0 <cmd> [args]')
-  .command('market [exchange] side amount [symbol]', 'submit a market order', (yargs) => {
-    yargs
-    .positional('exchange', {
+  .command('market exchange side amount [symbol]', 'submit a market order', (yargs) => {
+    yargs.positional('exchange', {
       type: 'string',
       describe: 'exchange to use',
       choices: exchanges,
       default: 'bitmex'
-    })
-    .positional('side', {
+    }).positional('side', {
       type: 'string',
       describe: 'either buy or sell',
       choices: ['buy', 'sell']
@@ -176,7 +185,7 @@ require('yargs')
       default: 'XBTUSD'
     })
   }, exchangeAbstraction('market'))
-  .command('position [exchange] [symbol]', 'show current position', (yargs) => {
+  .command('position exchange [symbol]', 'show current position', (yargs) => {
     yargs
     .positional('exchange', {
       type: 'string',
@@ -190,7 +199,7 @@ require('yargs')
       default: 'XBTUSD'
     })
   }, exchangeAbstraction('position'))
-  .command('fundingrate [exchange] [symbol]', 'show funding rate', (yargs) => {
+  .command('fundingrate exchange [symbol]', 'show funding rate', (yargs) => {
     yargs
     .positional('exchange', {
       type: 'string',
@@ -206,5 +215,4 @@ require('yargs')
   }, exchangeAbstraction('fundingRate'))
   .help()
   .argv
-
 })()
