@@ -27,12 +27,14 @@ const exchangeAbstraction = method => argv => {
     bitmex: {
       market: marketBitmex,
       position: positionBitmex,
-      fundingRate: fundingRateBitmex
+      fundingRate: fundingRateBitmex,
+      showPrice: showPriceBitmex
     },
     deribit: {
       market: marketDeribit,
       position: positionDeribit,
-      fundingRate: fundingRateDeribit
+      fundingRate: fundingRateDeribit,
+      showPrice:showPriceDeribit
     }
   }
   return methods[argv.exchange][method](argv)
@@ -151,16 +153,37 @@ async function fundingRateBitmex (argv) {
 
 async function fundingRateDeribit (argv) {
   let rp = require('request-promise')
+  argv.symbol = argv.symbol === 'XBTUSD' ? 'BTC-PERPETUAL' : argv.symbol
   let fundingRate = await rp({
     uri: `https://${process.env.TESTNET === 'true' ? 'test.' : ''}deribit.com/api/v2/public/get_funding_chart_data`,
     qs: {
-      instrument_name: argv.symbol === 'XBTUSD' ? 'BTC-PERPETUAL' : argv.symbol,
+      instrument_name: argv.symbol,
       length: '8h'
     },
     json: true
   })
-  fundingRate = fundingRate.result.current_interest
-  printFundingRate('BTC-PERPETUAL', fundingRate)
+  fundingRate = fundingRate.result.interest_8h
+  printFundingRate(argv.symbol, fundingRate)
+}
+
+async function showPriceBitmex (argv) {
+  argv.symbol = argv.symbol === 'XBTUSD' ? 'BTC/USD' : argv.symbol
+  let exchange = getExchange('bitmex')({})
+  let price = await exchange.fetchTickers()
+  let average = price[argv.symbol].average
+  let text = `Average price for ${argv.symbol} is ${average}`
+  let jsonText = {
+    symbol: argv.symbol,
+    averagePrice: average
+  }
+  console.log(process.env.JSON_OUTPUT === 'true' ?
+    JSON.stringify(jsonText) :
+    text
+  );
+}
+
+async function showPriceDeribit (argv) {
+  throw new Error('Deribit does not have ticker fetching support yet')
 }
 
 require('yargs')
@@ -171,7 +194,6 @@ require('yargs')
       type: 'string',
       describe: 'exchange to use',
       choices: exchanges,
-      default: 'bitmex'
     }).positional('side', {
       type: 'string',
       describe: 'either buy or sell',
@@ -191,7 +213,6 @@ require('yargs')
       type: 'string',
       describe: 'exchange to use',
       choices: exchanges,
-      default: 'bitmex'
     })
     .positional('symbol', {
       type: 'string',
@@ -205,7 +226,6 @@ require('yargs')
       type: 'string',
       describe: 'exchange to use',
       choices: exchanges,
-      default: 'bitmex'
     })
     .positional('symbol', {
       type: 'string',
@@ -213,6 +233,19 @@ require('yargs')
       default: 'XBTUSD'
     })
   }, exchangeAbstraction('fundingRate'))
+  .command('show price exchange [symbol]', 'show price of crypto currency in fiat', (yargs) => {
+    yargs
+    .positional('exchange', {
+      type: 'string',
+      describe: 'exchange to use',
+      choices: exchanges,
+    })
+    .positional('symbol', {
+      type: 'string',
+      describe: 'which market to show funding rate of, default XBTUSD',
+      default: 'XBTUSD'
+    })
+  }, exchangeAbstraction('showPrice'))
   .help()
   .argv
 })()
