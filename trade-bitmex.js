@@ -28,13 +28,17 @@ const exchangeAbstraction = method => argv => {
       market: marketBitmex,
       position: positionBitmex,
       fundingRate: fundingRateBitmex,
-      showPrice: showPriceBitmex
+      showPrice: showPriceBitmex,
+      getDepositAddress: getDepositAddressBitmex,
+      getAccountInfo: getAccountInfoBitmex
     },
     deribit: {
       market: marketDeribit,
       position: positionDeribit,
       fundingRate: fundingRateDeribit,
-      showPrice:showPriceDeribit
+      showPrice:showPriceDeribit,
+      getDepositAddress: getDepositAddressDeribit,
+      getAccountInfo: getAccountInfoDeribit
     }
   }
   return methods[argv.exchange][method](argv)
@@ -186,6 +190,52 @@ async function showPriceDeribit (argv) {
   throw new Error('Deribit does not have ticker fetching support yet')
 }
 
+function printDepositAddress(address){
+  console.log(process.env.JSON_OUTPUT === 'true' ?
+    JSON.stringify({address}) :
+    address
+  )
+}
+
+async function getDepositAddressBitmex (argv) {
+  let exchange = getExchange('bitmex')(configs.bitmex)
+  let address = (await exchange.privateGetUserDepositAddress()).replace(/\"/g,'')
+  printDepositAddress(address)
+}
+async function getDepositAddressDeribit (argv) {
+  let rp = require('request-promise')
+  let authToken = await rp({
+    uri: `https://${process.env.TESTNET === 'true' ? 'test.' : ''}deribit.com/api/v2/public/auth`,
+    qs: {
+      client_id: configs.deribit.apiKey,
+      client_secret: configs.deribit.secret,
+      grant_type: 'client_credentials'
+    },
+    json: true
+  })
+  authToken = authToken.result.access_token
+  let address = await rp({
+    uri: `https://${process.env.TESTNET === 'true' ? 'test.' : ''}deribit.com/api/v2/private/get_current_deposit_address`,
+    headers: {
+      Authorization: `Bearer ${authToken}`
+    },
+    qs: {
+      currency: 'BTC'
+    },
+    json: true
+  })
+  address = address.result.address
+  printDepositAddress(address)
+}
+
+async function getAccountInfoBitmex (argv) {
+  console.log('unimplemented');
+}
+
+async function getAccountInfoDeribit (argv) {
+  console.log('unimplemented');
+}
+
 require('yargs')
   .scriptName('trade-bitmex')
   .usage('$0 <cmd> [args]')
@@ -246,6 +296,22 @@ require('yargs')
       default: 'XBTUSD'
     })
   }, exchangeAbstraction('showPrice'))
+  .command('get deposit address exchange', 'get your deposit address from exchange', (yargs) => {
+    yargs
+    .positional('exchange', {
+      type: 'string',
+      describe: 'exchange to use',
+      choices: exchanges,
+    })
+  }, exchangeAbstraction('getDepositAddress'))
+  .command('get account info exchange', 'get account information from exchange', (yargs) => {
+    yargs
+    .positional('exchange', {
+      type: 'string',
+      describe: 'exchange to use',
+      choices: exchanges,
+    })
+  }, exchangeAbstraction('getAccountInfo'))
   .help()
   .argv
 })()
