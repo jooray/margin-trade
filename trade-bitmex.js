@@ -228,8 +228,22 @@ async function getDepositAddressDeribit (argv) {
   printDepositAddress(address)
 }
 
+function printAccountInfo(account, currency, amount) {
+  let humanText = `Account ID: ${account}\n` +
+    `Currency: ${currency}\n` +
+    `Balance: ${+(amount/100000000).toFixed(8)} ${currency}`
+  let jsonText = JSON.stringify({
+    account,
+    currency,
+    amount
+  })
+  console.log(process.env.JSON_OUTPUT === 'true' ? jsonText : humanText)
+}
+
 async function getAccountInfoBitmex (argv) {
-  console.log('unimplemented');
+  let exchange = getExchange('bitmex')(configs.bitmex)
+  let info = await exchange.privateGetUserWallet()
+  printAccountInfo(info.account, info.currency, info.amount)
 }
 
 async function getAccountInfoDeribit (argv) {
