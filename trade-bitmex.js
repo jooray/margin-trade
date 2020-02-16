@@ -228,22 +228,25 @@ async function getDepositAddressDeribit (argv) {
   printDepositAddress(address)
 }
 
-function printAccountInfo(account, currency, amount) {
+function printAccountInfo(account, currency, walletBalance, marginBalance) {
   let humanText = `Account ID: ${account}\n` +
     `Currency: ${currency}\n` +
-    `Balance: ${+(amount/100000000).toFixed(8)} ${currency}`
+    `Balance: ${+(walletBalance/100000000).toFixed(8)} ${currency}\n` +
+    `Margin Balance: ${+(marginBalance/100000000).toFixed(8)} ${currency}`
   let jsonText = JSON.stringify({
     account,
     currency,
-    amount
+    walletBalance,
+    marginBalance
   })
   console.log(process.env.JSON_OUTPUT === 'true' ? jsonText : humanText)
 }
 
 async function getAccountInfoBitmex (argv) {
   let exchange = getExchange('bitmex')(configs.bitmex)
-  let info = await exchange.privateGetUserWallet()
-  printAccountInfo(info.account, info.currency, info.amount)
+  // let info = await exchange.privateGetUserWallet()
+  let info = await exchange.privateGetUserMargin()
+  printAccountInfo(info.account, info.currency, info.walletBalance, info.marginBalance)
 }
 
 async function getAccountInfoDeribit (argv) {
@@ -253,7 +256,7 @@ async function getAccountInfoDeribit (argv) {
 require('yargs')
   .scriptName('trade-bitmex')
   .usage('$0 <cmd> [args]')
-  .command('market exchange side amount [symbol]', 'submit a market order', (yargs) => {
+  .command('market <exchange> <side> <amount> [symbol]', 'submit a market order', (yargs) => {
     yargs.positional('exchange', {
       type: 'string',
       describe: 'exchange to use',
@@ -271,7 +274,7 @@ require('yargs')
       default: 'XBTUSD'
     })
   }, exchangeAbstraction('market'))
-  .command('position exchange [symbol]', 'show current position', (yargs) => {
+  .command('position <exchange> [symbol]', 'show current position', (yargs) => {
     yargs
     .positional('exchange', {
       type: 'string',
@@ -284,7 +287,7 @@ require('yargs')
       default: 'XBTUSD'
     })
   }, exchangeAbstraction('position'))
-  .command('fundingrate exchange [symbol]', 'show funding rate', (yargs) => {
+  .command('fundingrate <exchange> [symbol]', 'show funding rate', (yargs) => {
     yargs
     .positional('exchange', {
       type: 'string',
@@ -297,7 +300,7 @@ require('yargs')
       default: 'XBTUSD'
     })
   }, exchangeAbstraction('fundingRate'))
-  .command('show price exchange [symbol]', 'show price of crypto currency in fiat', (yargs) => {
+  .command('price <exchange> [symbol]', 'show price of crypto currency in fiat', (yargs) => {
     yargs
     .positional('exchange', {
       type: 'string',
@@ -310,7 +313,7 @@ require('yargs')
       default: 'XBTUSD'
     })
   }, exchangeAbstraction('showPrice'))
-  .command('get deposit address exchange', 'get your deposit address from exchange', (yargs) => {
+  .command('deposit_address <exchange>', 'get your deposit address from exchange', (yargs) => {
     yargs
     .positional('exchange', {
       type: 'string',
@@ -318,7 +321,7 @@ require('yargs')
       choices: exchanges,
     })
   }, exchangeAbstraction('getDepositAddress'))
-  .command('get account info exchange', 'get account information from exchange', (yargs) => {
+  .command('account_info <exchange>', 'get account information from exchange', (yargs) => {
     yargs
     .positional('exchange', {
       type: 'string',
