@@ -1,10 +1,10 @@
 # margin-bitmex
 
-See liquidation on [Bitmex](https://www.bitmex.com/register/FG84Zq) XBTUSD perpetual swap and get notified, perform simple trades
+See liquidation on [Bitmex](https://www.bitmex.com/register/FG84Zq) futures and get notified, perform simple trades
 
 ## Motivation
 
-Sometimes you want to keep USD value of your Bitcoin, for example if you know you will have future expenses with known USD value. If you don't want to go to Ethereum-land for this purpose and want to stay within the BTC ecosystem, you could use [Bitmex](https://www.bitmex.com/register/FG84Zq)'s perpetual swap for this purpose.
+Sometimes you want to keep USD value of your Bitcoin, for example if you know you will have future expenses with known USD value. If you don't want to go to Ethereum-land for this purpose and want to stay within the BTC ecosystem, you could use [Bitmex](https://www.bitmex.com/register/FG84Zq)'s perpetual swap or expiring futures for this purpose.
 
 [Bitmex](https://www.bitmex.com/register/FG84Zq) is a well-known centralized exchange. In order to minimize counterparty risk (hacking, owners of [Bitmex](https://www.bitmex.com/register/FG84Zq) just running away with your crypto), you can enter hedging positions, but keep most of your coins outside of [Bitmex](https://www.bitmex.com/register/FG84Zq) (for example on your hardware wallet).
 
@@ -64,7 +64,7 @@ When you have your API keys set up, it's time to play
 
 ### margin-bitmex.js
 
-This program is used to check the liquidation position of XBTUSD perpetual swap position, that you can use to fix your Bitcoin's USD value (short) or do collateralized loan (long).
+This program is used to check the liquidation price of future/perpetual swap positions. You can use these to fix your Bitcoin's USD value (short) or do collateralized loan (long).
 
 When [Bitmex](https://www.bitmex.com/register/FG84Zq) API returns the position's liquidation price, we check the difference between the last price and liquidation price and it's difference.
 
