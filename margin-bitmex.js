@@ -21,7 +21,8 @@ Promise.all([balancePromise, positionsPromise]).then( (values) => {
   if (positions.length > 0) {
     liquidationPrice = positions[0].liquidationPrice
     lastPrice = positions[0].lastPrice
-    liquidationPercentage = liquidationPrice / lastPrice
+    isLong = (positions[0].currentQty > 0)
+    liquidationPercentage = (isLong) ? (lastPrice / liquidationPrice) : (liquidationPrice / lastPrice)
     console.error('Last price: ' + lastPrice)
     console.error('Liquidation price: ' + liquidationPrice)
     console.error('Margin of safety: ' + (liquidationPercentage*100).toFixed(2) + '%')
