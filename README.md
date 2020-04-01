@@ -32,7 +32,7 @@ node trade-bitmex.js market buy 21
 
 The rest of the position is still hedged.
 
-After three days, Bitcoin goes up a bit and my position would get liquidated soon, if I do not fund my [Bitmex](https://www.bitmex.com/register/FG84Zq) account. I send the transaction from my wallet to [Bitmex](https://www.bitmex.com/register/FG84Zq). Then I have to pay my Internet connection. I pay with BTC using [Lamium](http://bit.ly/lamium-juraj) and I need to exit the rest of the position.
+After three days, Bitcoin goes up a bit and my position would get liquidated soon, if I do not fund my [Bitmex](https://www.bitmex.com/register/FG84Zq) account. I send the transaction from my wallet to [Bitmex](https://www.bitmex.com/register/FG84Zq). Then I have to pay my Internet connection. I pay with BTC using [Lamium](https://lamium.io/?ref=5jTwHHDt) and I need to exit the rest of the position.
 
 ```
 node trade-bitmex.js market buy 39
@@ -189,7 +189,7 @@ You can also use my referral links to register for the services that allow you t
 
 * [Bitmex](https://www.bitmex.com/register/FG84Zq) - a derivatives exchange that this project is all about
 
-* [Lamium](http://bit.ly/lamium-juraj) - a service to pay your standard invoices in Europe (SEPA) area using Bitcoin
+* [Lamium](https://lamium.io/?ref=5jTwHHDt) - a service to pay your standard invoices in Europe (SEPA) area using Bitcoin
 
 * [Purse](https://bit.ly/purse-juraj) - a service that allows you to do [up to 33% discounted shopping on Amazon](https://juraj.bednar.io/en/blog-en/2019/06/11/how-to-use-cryptocurrencies-for-discounted-shopping-on-amazon/)
 
