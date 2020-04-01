@@ -1,6 +1,6 @@
 # margin-bitmex
 
-See liquidation on [Bitmex](https://www.bitmex.com/register/FG84Zq) XBTUSD short perpetual swap and get notified, perform simple trades
+See liquidation on [Bitmex](https://www.bitmex.com/register/FG84Zq) XBTUSD perpetual swap and get notified, perform simple trades
 
 ## Motivation
 
@@ -64,9 +64,9 @@ When you have your API keys set up, it's time to play
 
 ### margin-bitmex.js
 
-This program is used to check the liquidation position of XBTUSD perpetual swap **short** position, that you can use to fix your Bitcoin's USD value. It does not work with long positions.
+This program is used to check the liquidation position of XBTUSD perpetual swap position, that you can use to fix your Bitcoin's USD value (short) or do collateralized loan (long).
 
-When [Bitmex](https://www.bitmex.com/register/FG84Zq) API returns the short position's liquidation price, we check the difference between the last price and liquidation price and it's difference.
+When [Bitmex](https://www.bitmex.com/register/FG84Zq) API returns the position's liquidation price, we check the difference between the last price and liquidation price and it's difference.
 
 ```
 # node margin-bitmex.js
@@ -76,7 +76,7 @@ Liquidation price: 12666
 Margin of safety: 1.3507748879153318
 ```
 
-If you want to get a warning, you can add -w 1.4 parameter, which will create a warning if liquidation price is 140% of last price or less.
+If you want to get a warning, you can add -w 1.4 parameter, which will create a warning if liquidation price is 140% of last price or less (in short position) or more in case of long position.
 
 ```
 node margin-bitmex.js -w 1.4
