@@ -66,25 +66,37 @@ When you have your API keys set up, it's time to play
 
 This program is used to check the liquidation price of future/perpetual swap positions. You can use these to fix your Bitcoin's USD value (short) or do collateralized loan (long).
 
-When [Bitmex](https://www.bitmex.com/register/FG84Zq) API returns the position's liquidation price, we check the difference between the last price and liquidation price and it's difference.
+When [Bitmex](https://www.bitmex.com/register/FG84Zq) API returns the position's liquidation price, we check the difference between the last price and liquidation price.
 
 ```
 # node margin-bitmex.js
 Balance: 0.001
-Last price: 9376.84
-Liquidation price: 12666
-Margin of safety: 1.3507748879153318
+Symbol: XBTU20
+Last price: 6309.57
+Liquidation price: 4548
+Margin of safety: 38.73%
+Symbol: XBTUSD
+Last price: 6368.65
+Liquidation price: 100000000
+Margin of safety: 99.99%
 ```
 
-If you want to get a warning, you can add -w 1.4 parameter, which will create a warning if liquidation price is 140% of last price or less (in short position) or more in case of long position.
+If you want to get a warning, you can parameter -w, which will create a warning if 30% movement from last price would cause liquidation.
 
 ```
-node margin-bitmex.js -w 1.4
+node margin-bitmex.js -w 30
 Balance: 0.001
-Last price: 9363.96
-Liquidation price: 12666
-Margin of safety: 1.3526328604564737
-Our liquidation margin is below threshold!
+Symbol: XBTU20
+Last price: 6310.81
+Liquidation price: 4548
+Margin of safety: 38.76%
+This position is below threshold
+Symbol: XBTUSD
+Last price: 6369.92
+Liquidation price: 100000000
+Margin of safety: 99.99%
+This position is below threshold
+Our liquidation margin is below threshold on at least one position!
 Deposit to: "3LGdXkqYCMPC2S3rJELPjxoK4G7Ao9Qa1s"
 ```
 
