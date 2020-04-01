@@ -28,7 +28,7 @@ Promise.all([balancePromise, positionsPromise]).then( (values) => {
     console.error('Last price: ' + lastPrice)
     console.error('Liquidation price: ' + liquidationPrice)
     console.error('Margin of safety: ' + (liquidationPercentage*100).toFixed(2) + '%')
-    if ((argv.w) && ((argv.w/100) < liquidationPercentage)) {
+    if ((argv.w) && ((argv.w/100) > liquidationPercentage)) {
       isUndercollateralized = true
       console.error('This position is below threshold')
     }
