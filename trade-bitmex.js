@@ -65,7 +65,7 @@ require('yargs')
       }
     })
   })
-  .command('fundingrate [symbol]', 'show funding rate', (yargs) => {
+  .command('fundingrate [symbol]', 'show funding rate of perpetual swaps', (yargs) => {
     yargs.positional('symbol', {
       type: 'string',
       describe: 'which market to show funding rate of, default XBTUSD',
@@ -85,6 +85,40 @@ require('yargs')
         console.log('Instrument ' + instrument.symbol + ' funding rate ' +
           instrument.fundingRate + ' which is approx ' +
           (instrument.fundingRate*3*365*100).toFixed(2) + '% p.a.')
+      }
+    })
+  })
+  .command('instrument [symbol]', 'show instruments and their premium', (yargs) => {
+    yargs.positional('symbol', {
+      type: 'string',
+      describe: 'which symbol to show funding rate of, default all open',
+      default: ''
+    })
+  }, function (argv) {
+
+    let exchange = new ccxt.bitmex()
+
+    var instrumentArgs = {
+      filter: {
+        "state": "Open",
+      }
+    }
+
+    if (argv.symbol)
+      instrumentArgs = { "symbol": argv.symbol }
+
+    exchange.publicGetInstrument(instrumentArgs).then( (instruments) => {
+      for (const instrument of instruments) {
+        let premium = (instrument.markPrice - instrument.indicativeSettlePrice) / instrument.indicativeSettlePrice
+        console.log('Instrument ' + instrument.symbol + ' price ' + instrument.markPrice
+          + ' settle price ' + instrument.indicativeSettlePrice
+          + ' premium ' + (100*premium).toFixed(2) + '%'
+          + (instrument.expiry ? (
+            ' (' + (100 * premium * 365 / Math.abs((new Date() - Date.parse(instrument.expiry)) / (24 * 60 * 60 * 1000))).toFixed(2)
+            + '% p.a.)'
+            +' expiry ' + instrument.expiry) : '')
+
+        )
       }
     })
   })

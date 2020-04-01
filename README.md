@@ -123,7 +123,8 @@ trade-bitmex <cmd> [args]
 Commands:
   trade-bitmex market side amount [symbol]  submit a market order
   trade-bitmex position [symbol]            show current position
-  trade-bitmex fundingrate [symbol]         show funding rate
+  trade-bitmex fundingrate [symbol]         show funding rate of perpetual swaps
+  trade-bitmex instrument [symbol]          show instruments and their premium
 
 Options:
   --version  Show version number                                       [boolean]
@@ -169,8 +170,8 @@ This is something like USD balance of this strategy.
 #### Funding rate
 
 We would also like to know the current interest rate (called funding rate).
-Shorts earn this funding rate, so if this gets negative, we pay funding rate
-(it happens sometimes).
+Shorts earn this funding rate if it is positive (longs pay shorts). If it is
+negative (it happens sometimes), shorts pay longs.
 
 ```
 node trade-bitmex.js fundingrate
@@ -178,6 +179,28 @@ Instrument XBTUSD funding rate 0.0001 which is approx 10.95% p.a.
 ```
 
 Please note that the funding rate changes all the time.
+
+#### Open instruments overview
+
+You can also get overview of currently traded instruments. For expiring futures,
+you also see premium and annualized premium. If premium is negative, longs get
+a discount on (future) asset.
+
+```
+node trade-bitmex.js instrument
+Instrument XBTUSD price 6377.92 settle price 6380.59 premium -0.04%
+Instrument ETHUSD price 132.39 settle price 132.38 premium 0.01%
+Instrument XBTM20 price 6320.74 settle price 6380.59 premium -0.94% (-4.00% p.a.) expiry 2020-06-26T12:00:00.000Z
+Instrument XRPUSD price 0.1734 settle price 0.1734 premium 0.00%
+Instrument XBTU20 price 6318.85 settle price 6380.59 premium -0.97% (-2.00% p.a.) expiry 2020-09-25T12:00:00.000Z
+Instrument ETHM20 price 0.0206 settle price 0.02075 premium -0.72% (-3.08% p.a.) expiry 2020-06-26T12:00:00.000Z
+Instrument LTCM20 price 0.005907 settle price 0.00602 premium -1.88% (-8.00% p.a.) expiry 2020-06-26T12:00:00.000Z
+Instrument XRPM20 price 0.0000271 settle price 0.00002716 premium -0.22% (-0.94% p.a.) expiry 2020-06-26T12:00:00.000Z
+Instrument BCHM20 price 0.03395 settle price 0.03435 premium -1.16% (-4.97% p.a.) expiry 2020-06-26T12:00:00.000Z
+Instrument ADAM20 price 0.00000475 settle price 0.00000474 premium 0.21% (0.90% p.a.) expiry 2020-06-26T12:00:00.000Z
+Instrument EOSM20 price 0.0003416 settle price 0.0003457 premium -1.19% (-5.06% p.a.) expiry 2020-06-26T12:00:00.000Z
+Instrument TRXM20 price 0.00000178 settle price 0.00000178 premium 0.00% (0.00% p.a.) expiry 2020-06-26T12:00:00.000Z
+```
 
 # Donate and more information about the crypto lifestyle
 
