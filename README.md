@@ -21,13 +21,13 @@ I received 100 USD in BTC as a payment for a project. I know I have to cover my 
 Because I have the BTC, I need to quickly hedge 39+21=60 USD in BTC. I have an account on [Bitmex](https://www.bitmex.com/register/FG84Zq) with a sufficient margin. I need to sell 60 units of XBTUSD contract:
 
 ```
-node trade-bitmex.js market sell 60
+# node trade-bitmex.js market sell 60
 ```
 
 In the evening, I pay 21 USD for dinner and because I live in a country where I can pay with BTC in restaurants, I have spent 21 USD worth of BTC for dinner. In order not to leave the position, I need to buy 21 units of XBTUSD contract on [Bitmex](https://www.bitmex.com/register/FG84Zq):
 
 ```
-node trade-bitmex.js market buy 21
+# node trade-bitmex.js market buy 21
 ```
 
 The rest of the position is still hedged.
@@ -35,7 +35,7 @@ The rest of the position is still hedged.
 After three days, Bitcoin goes up a bit and my position would get liquidated soon, if I do not fund my [Bitmex](https://www.bitmex.com/register/FG84Zq) account. I send the transaction from my wallet to [Bitmex](https://www.bitmex.com/register/FG84Zq). Then I have to pay my Internet connection. I pay with BTC using [Lamium](https://lamium.io/?ref=5jTwHHDt) and I need to exit the rest of the position.
 
 ```
-node trade-bitmex.js market buy 39
+# node trade-bitmex.js market buy 39
 ```
 
 During the time of the hedging, my 60 USD (and then 39 USD after I ate dinner) were safely hedged, so even a drop of 50% would not hurt me. In addition, I earned funding rate for the duration of my position (could be easily 10% p.a., check [Bitmex](https://www.bitmex.com/register/FG84Zq)'s current funding rate).
@@ -84,7 +84,7 @@ Margin of safety: 99.99%
 If you want to get a warning, you can parameter -w, which will create a warning if 30% movement from last price would cause liquidation.
 
 ```
-node margin-bitmex.js -w 30
+# node margin-bitmex.js -w 30
 Balance: 0.001
 Symbol: XBTU20
 Last price: 6310.81
@@ -159,18 +159,19 @@ Of course I should have received/saved 1 USD worth of BTC in order for this to s
 If you are spending from the account, you are buying XBTUSD (yes, it is counterintuitive, but you are buying back BTC, so lowering your position), so you would do:
 
 ```bash
-node trade-bitmex.js market buy 1
+# node trade-bitmex.js market buy 1
 ```
 
 You can also buy/sell on other markets, that's the last parameter, it just defaults to XBTUSD.
 
 #### Checking your position
 
-In order to see your current (dollar) position run:
+In order to see your current (dollar) positions run:
 
 ```
 # node trade-bitmex.js position
-Position -60 USD
+XBTU20 20 USD
+XBTUSD -60 USD
 ```
 
 Because we are short 60 USD (-60 means short 60) on XBTUSD, it means that along with original
@@ -179,6 +180,8 @@ have hedged 60 USD value in BTC.
 
 This is something like USD balance of this strategy.
 
+There is another future position where we are long 20 USD shown.
+
 #### Funding rate
 
 We would also like to know the current interest rate (called funding rate).
@@ -186,7 +189,7 @@ Shorts earn this funding rate if it is positive (longs pay shorts). If it is
 negative (it happens sometimes), shorts pay longs.
 
 ```
-node trade-bitmex.js fundingrate
+# node trade-bitmex.js fundingrate
 Instrument XBTUSD funding rate 0.0001 which is approx 10.95% p.a.
 ```
 
@@ -199,7 +202,7 @@ you also see premium and annualized premium. If premium is negative, longs get
 a discount on (future) asset.
 
 ```
-node trade-bitmex.js instrument
+# node trade-bitmex.js instrument
 Instrument XBTUSD price 6377.92 settle price 6380.59 premium -0.04%
 Instrument ETHUSD price 132.39 settle price 132.38 premium 0.01%
 Instrument XBTM20 price 6320.74 settle price 6380.59 premium -0.94% (-4.00% p.a.) expiry 2020-06-26T12:00:00.000Z

@@ -44,8 +44,7 @@ require('yargs')
   .command('position [symbol]', 'show current position', (yargs) => {
     yargs.positional('symbol', {
       type: 'string',
-      describe: 'which market to show position in, default XBTUSD',
-      default: 'XBTUSD'
+      describe: 'which market to show position in, default all'
     })
   }, function (argv) {
 
@@ -54,14 +53,13 @@ require('yargs')
      'secret': process.env.APISECRET,
     })
 
-    exchange.privateGetPosition({
-      filter: {
-        "isOpen": true,
-        "symbol": argv.symbol
-      }
-    }).then( (positions) => {
+    var positionFilter = { "isOpen": true }
+
+    if (argv.symbol) positionFilter["symbol"] = argv.symbol
+
+    exchange.privateGetPosition({ filter: positionFilter }).then( (positions) => {
       for (const position of positions) {
-        console.log('Position ' + position.currentQty + ' ' + position.quoteCurrency)
+        console.log(position.symbol + ' ' + position.currentQty + ' ' + position.quoteCurrency)
       }
     })
   })
