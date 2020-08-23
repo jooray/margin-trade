@@ -83,15 +83,16 @@ async function marketDeribit (argv) {
   ordPrice = orderResult.avgPrice
   ordId = orderResult.orderId
   printOrderResult(ordStatus, ordPrice, ordId)
-
 }
 
-function printPosition({currency, quoteCurrency, positionAmount, price, entry, value}) {
-  let humanText = `Position:\t ${positionAmount} ${quoteCurrency}\n` +
+function printPosition({currency, quoteCurrency, positionAmount, price, entry, value,instrument}) {
+  let humanText = `Instrument:\t ${instrument}\n` +
+    `Position:\t ${positionAmount} ${quoteCurrency}\n` +
     `Current price:\t ${price} ${quoteCurrency}\n` +
     `Entry price:\t ${+entry.toFixed(2)} ${quoteCurrency}\n` +
-    `Current value:\t ${+(value/100000000).toFixed(8)} ${currency}`
+    `Current value:\t ${+(value/100000000).toFixed(8)} ${currency}\n`
   let jsonText = JSON.stringify({
+    instrument,
     positionAmount,
     price,
     entry: +entry.toFixed(2),
@@ -131,7 +132,8 @@ async function positionDeribit (argv) {
       positionAmount: position.amount,
       price: position.markPrice,
       entry: position.averagePrice,
-      value: Math.ceil(position.sizeBtc * 100000000)
+      value: Math.ceil(position.sizeBtc * 100000000),
+      instrument: position.instrument
     })
   }
 }
