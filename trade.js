@@ -257,7 +257,7 @@ async function getAccountInfoDeribit (argv) {
 }
 
 require('yargs')
-  .scriptName('trade-bitmex')
+  .scriptName('trade')
   .usage('$0 <cmd> [args]')
   .command('market <exchange> <side> <amount> [symbol]', 'submit a market order', (yargs) => {
     yargs.positional('exchange', {

@@ -28,13 +28,13 @@ I received 100 USD in BTC as a payment for a project. I know I have to cover my 
 Because I have the BTC, I need to quickly hedge 39+21=60 USD in BTC. I have an account on [Deribit](https://www.deribit.com/reg-9895.86) with a sufficient margin. I need to sell 60 units of XBTUSD contract:
 
 ```
-# node trade.js market sell 60
+# node trade.js market deribit sell 60
 ```
 
 In the evening, I pay 21 USD for dinner and because I live in a country where I can pay with BTC in restaurants, I have spent 21 USD worth of BTC for dinner. In order not to leave the position, I need to buy 21 units of XBTUSD contract on [Deribit](https://www.deribit.com/reg-9895.86):
 
 ```
-# node trade.js market buy 21
+# node trade.js market deribit buy 21
 ```
 
 The rest of the position is still hedged.
@@ -42,7 +42,7 @@ The rest of the position is still hedged.
 After three days, Bitcoin goes up a bit and my position would get liquidated soon, if I do not fund my [Deribit](https://www.deribit.com/reg-9895.86). Then I have to pay my Internet connection. I pay with BTC using [Lamium](https://lamium.io/?ref=5jTwHHDt) and I need to exit the rest of the position.
 
 ```
-# node trade.js market buy 39
+# node trade.js market deribit buy 39
 ```
 
 During the time of the hedging, my 60 USD (and then 39 USD after I ate dinner) were safely hedged, so even a drop of 50% would not hurt me. In addition, I earned funding rate for the duration of my position (could be easily 10% p.a., check [Deribit](https://www.deribit.com/reg-9895.86)'s current funding rate).
@@ -131,18 +131,24 @@ This will run the checker every thirty minutes. This is also the interval in whi
 
 ### trade.js
 
-This is an experimental feature which allows me to do quick trades from the command-line without login
+This script allows to perform quick trades from the command-line without login
 and see your position and other parameters.
 
 ```
 # node trade.js help
-trade-bitmex <cmd> [args]
+trade <cmd> [args]
 
 Commands:
-  trade-bitmex market side amount [symbol]  submit a market order
-  trade-bitmex position [symbol]            show current position
-  trade-bitmex fundingrate [symbol]         show funding rate of perpetual swaps
-  trade-bitmex instrument [symbol]          show instruments and their premium
+  trade market <exchange> <side> <amount>   submit a market order
+  [symbol]
+  trade position <exchange> [symbol]        show current position
+  trade fundingrate <exchange> [symbol]     show funding rate
+  trade price <exchange> [symbol]           show price of crypto currency in
+                                            fiat
+  trade deposit_address <exchange>          get your deposit address from
+                                            exchange
+  trade account_info <exchange>             get account information from
+                                            exchange
 
 Options:
   --version  Show version number                                       [boolean]
@@ -154,7 +160,7 @@ Options:
 If I want to fix USD value of my BTC, I do market sell order, for example in this case fixing 10 USD:
 
 ```
-# node trade.js market sell 10
+# node trade.js market deribit sell 10
 Submitting a sell order for 10 on XBTUSD
 Order status Filled average price 9283.5
 Order ID: [CENSORED]
@@ -165,7 +171,7 @@ Of course I should have received/saved 10 USD worth of BTC in order for this to 
 If you are spending from the account, you are buying XBTUSD (yes, it is counterintuitive, but you are buying back BTC, so lowering your position), so you would do:
 
 ```bash
-# node trade.js market buy 10
+# node trade.js market deribit buy 10
 ```
 
 You can also buy/sell on other markets, that's the last parameter, it just defaults to XBTUSD.
@@ -175,7 +181,7 @@ You can also buy/sell on other markets, that's the last parameter, it just defau
 In order to see your current (dollar) positions run:
 
 ```
-# node trade.js position
+# node trade.js position deribit
 XBTU20 20 USD
 XBTUSD -60 USD
 ```
@@ -195,7 +201,7 @@ Shorts earn this funding rate if it is positive (longs pay shorts). If it is
 negative (it happens sometimes), shorts pay longs.
 
 ```
-# node trade.js fundingrate
+# node trade.js fundingrate deribit
 Instrument XBTUSD funding rate 0.0001 which is approx 10.95% p.a.
 ```
 
@@ -208,7 +214,7 @@ you also see premium and annualized premium. If premium is negative, longs get
 a discount on (future) asset.
 
 ```
-# node trade.js instrument
+# node trade.js instrument deribit
 Instrument XBTUSD price 6377.92 settle price 6380.59 premium -0.04%
 Instrument ETHUSD price 132.39 settle price 132.38 premium 0.01%
 Instrument XBTM20 price 6320.74 settle price 6380.59 premium -0.94% (-4.00% p.a.) expiry 2020-06-26T12:00:00.000Z
