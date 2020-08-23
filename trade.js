@@ -70,11 +70,12 @@ async function marketBitmex (argv) {
 }
 
 async function marketDeribit (argv) {
-  printSubmit(argv.side, argv.amount, argv.symbol)
+  let instrument = argv.symbol === 'XBTUSD' ? 'BTC-PERPETUAL' : argv.symbol
+  printSubmit(argv.side, argv.amount, instrument)
   const exchange = getExchange('deribit')(configs.deribit)
   const promise = argv.side === 'buy' ? exchange.privatePostBuy : exchange.privatePostSell
   let orderResult = await promise({
-    instrument: argv.symbol === 'XBTUSD' ? 'BTC-PERPETUAL' : argv.symbol,
+    instrument,
     amount: argv.amount,
     type: 'market',
   })
