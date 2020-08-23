@@ -73,7 +73,7 @@ When you have your API keys set up, it's time to play
 
 This program is used to check the liquidation price of future/perpetual swap positions. You can use these to fix your Bitcoin's USD value (short) or do collateralized loan (long).
 
-When [Deribit](https://www.deribit.com/reg-9895.86) API returns the position's liquidation price, we check the difference between the last price and liquidation price.
+When we get the position's liquidation price from the exchange, we check the difference between the last price and liquidation price.
 
 ```
 # node margin-bitmex.js
@@ -167,6 +167,8 @@ Order ID: [CENSORED]
 ```
 
 Of course I should have received/saved 10 USD worth of BTC in order for this to stabilize and not short BTC - you should do this when you receive BTC that has some value and you want to keep the USD value of received BTC.
+
+Please note that Deribit accepts orders only in multiplies of 10 USD (so you cannot hedge 5 USD, only 10 USD, 20 USD, etc.).
 
 If you are spending from the account, you are buying XBTUSD (yes, it is counterintuitive, but you are buying back BTC, so lowering your position), so you would do:
 
