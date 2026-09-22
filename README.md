@@ -1,5 +1,20 @@
 # margin-trade
 
+## No longer maintained
+
+I do not maintain this project any more. If you came here for trading tooling, I now
+keep [funding-rate-tools](https://github.com/jooray/funding-rate-tools), which fetches
+perpetual funding rates, stores them and builds a dashboard.
+
+For what I am building now, see my
+[project showcase](https://juraj.bednar.io/showcase/).
+
+I also write books and work on things that are not code: my cypherpunk novel
+[Tamers of Entropy](https://tamersofentropy.net/), my English podcast
+[Option Plus](https://optionplus.io/), [my blog](https://juraj.bednar.io/en/blog-en/),
+and [everything else](https://juraj.bednar.io/en). There is also
+[more about me](https://juraj.bednar.io/en/about-me/).
+
 Trade Bitcoin derivatives on [Deribit](https://www.deribit.com/reg-9895.86) and [Bitmex](https://www.bitmex.com/register/FG84Zq).
 
 
